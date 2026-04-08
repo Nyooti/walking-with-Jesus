@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missions - Walking With Jesus Christ</title>
+    <link rel="stylesheet" href="/src/style.css">
+    <style>
+        .mission-post {
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .mission-post:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .mission-video-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            border-radius: 10px;
+            background: #f5f5f5;
+        }
+        
+        .mission-video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .mission-image-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+        }
+        
+        .mission-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .mission-content {
+            padding: 25px;
+        }
+        
+        .mission-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .mission-caption {
+            color: var(--text);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .mission-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: var(--bg-alt);
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .mission-date {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .mission-location {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-light);
+        }
+        
+        .upload-section {
+            background: var(--gold);
+            color: var(--white);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .upload-btn {
+            background: var(--white);
+            color: var(--primary);
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin: 10px;
+        }
+        
+        .upload-btn:hover {
+            background: var(--primary-light);
+            transform: scale(1.05);
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .mission-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .mission-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .mission-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+      <div class="nav-container">
+        <a href="index.html" class="nav-logo">
+          <img src="profile-image.jpg" alt="Walking With Jesus" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 10px;"> Walking With Jesus
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="index.html#gospel">The Gospel</a>
+          <a href="index.html#sermons">Sermons</a>
+          <a href="index.html#scripture">Daily Verse</a>
+          <a href="index.html#quote-day">Quote of the Day</a>
+          <a href="index.html#testimonies">Testimonies</a>
+          <a href="index.html#prayer">Prayer</a>
+          <a href="missions.html" class="active">Missions</a>
+          <a href="index.html#contact">Contact</a>
+        </div>
+        <button class="mobile-menu-btn" id="mobile-menu-btn">
+          <i data-lucide="menu"></i>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-overlay" id="mobile-overlay">
+      <div class="mobile-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#gospel">The Gospel</a>
+        <a href="index.html#sermons">Sermons</a>
+        <a href="index.html#scripture">Daily Verse</a>
+        <a href="index.html#quote-day">Quote of the Day</a>
+        <a href="index.html#testimonies">Testimonies</a>
+        <a href="index.html#prayer">Prayer</a>
+        <a href="missions.html" class="active">Missions</a>
+        <a href="index.html#contact">Contact</a>
+      </div>
+    </div>
+
+    <main>
+      <!-- Upload Section -->
+      <section class="section upload-section">
+        <div class="container">
+          <div class="section-header fade-in">
+            <h2 class="section-title">📸 Share Your Mission</h2>
+            <div class="gold-line"></div>
+            <p class="section-subtitle">Upload photos and stories from your missionary work</p>
+          </div>
+          
+          <div class="upload-form">
+            <input type="file" id="missionImage" class="file-input" accept="image/*" onchange="previewImage(event)">
+            <input type="file" id="missionVideo" class="file-input" accept="video/*" onchange="previewVideo(event)">
+            <button class="upload-btn" onclick="document.getElementById('missionImage').click()">
+              📤 Choose Mission Photo
+            </button>
+            <button class="upload-btn" onclick="document.getElementById('missionVideo').click()">
+              🎥 Upload Mission Video
+            </button>
+            <button class="upload-btn" onclick="openPostForm()">
+              ✍️ Create New Post
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Mission Posts Grid -->
+      <section class="section">
+        <div class="container">
+          <div class="section-header fade-in">
+            <h2 class="section-title">🌍 Mission Stories</h2>
+            <div class="gold-line"></div>
+            <p class="section-subtitle">Photos and testimonies from the field</p>
+          </div>
+
+          <div class="mission-grid" id="missionGrid">
+            <!-- Mission posts will be dynamically added here -->
+            
+            <!-- Sample Mission Post 1 -->
+            <div class="mission-post fade-in-up">
+              <div class="mission-image-container">
+                <img src="https://via.placeholder.com/600x400/002147/ffffff?text=Community+Outreach" alt="Community Outreach" class="mission-image">
+              </div>
+              <div class="mission-content">
+                <h3 class="mission-title">Community Outreach Program</h3>
+                <p class="mission-caption">Our team visited three local villages last month, sharing the Gospel message with over 200 families. We distributed food supplies and prayed with each household, seeing many hearts opened to God's love.</p>
+                <div class="mission-meta">
+                  <span class="mission-date">March 5, 2026</span>
+                  <div class="mission-location">
+                    <i data-lucide="map-pin"></i>
+                    <span>Rural Villages, Kenya</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sample Mission Post 2 -->
+            <div class="mission-post fade-in-up" style="animation-delay: 0.1s;">
+              <div class="mission-image-container">
+                <img src="https://via.placeholder.com/600x400/002147/ffffff?text=Youth+Camp+2026" alt="Youth Camp 2026" class="mission-image">
+              </div>
+              <div class="mission-content">
+                <h3 class="mission-title">Youth Camp 2026</h3>
+                <p class="mission-caption">A powerful week of discipleship and spiritual growth with over 50 young people. Many dedicated their lives to Christ through baptism and committed to serving their communities.</p>
+                <div class="mission-meta">
+                  <span class="mission-date">February 28, 2026</span>
+                  <div class="mission-location">
+                    <i data-lucide="map-pin"></i>
+                    <span>Nairobi, Kenya</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sample Mission Post 3 -->
+            <div class="mission-post fade-in-up" style="animation-delay: 0.2s;">
+              <div class="mission-image-container">
+                <img src="https://via.placeholder.com/600x400/002147/ffffff?text=Medical+Mission" alt="Medical Mission" class="mission-image">
+              </div>
+              <div class="mission-content">
+                <h3 class="mission-title">Medical Mission Trip</h3>
+                <p class="mission-caption">Our medical team provided free healthcare services to over 300 patients in remote areas. We shared God's love through practical care and prayed for healing of both body and soul.</p>
+                <div class="mission-meta">
+                  <span class="mission-date">February 15, 2026</span>
+                  <div class="mission-location">
+                    <i data-lucide="map-pin"></i>
+                    <span>Western Kenya</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <p>&copy; 2026 Walking With Jesus Christ Ministry. All rights reserved.</p>
+          <div class="footer-bottom-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Use</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Mission posts data storage
+        let missionPosts = [
+            {
+                id: 1,
+                title: "Community Outreach Program",
+                image: "https://via.placeholder.com/600x400/002147/ffffff?text=Community+Outreach",
+                caption: "Our team visited three local villages last month, sharing the Gospel message with over 200 families. We distributed food supplies and prayed with each household, seeing many hearts opened to God's love.",
+                date: "March 5, 2026",
+                location: "Rural Villages, Kenya"
+            },
+            {
+                id: 2,
+                title: "Youth Camp 2026",
+                image: "https://via.placeholder.com/600x400/002147/ffffff?text=Youth+Camp+2026",
+                caption: "A powerful week of discipleship and spiritual growth with over 50 young people. Many dedicated their lives to Christ through baptism and committed to serving their communities.",
+                date: "February 28, 2026",
+                location: "Nairobi, Kenya"
+            },
+            {
+                id: 3,
+                title: "Medical Mission Trip",
+                image: "https://via.placeholder.com/600x400/002147/ffffff?text=Medical+Mission",
+                caption: "Our medical team provided free healthcare services to over 300 patients in remote areas. We shared God's love through practical care and prayed for healing of both body and soul.",
+                date: "February 15, 2026",
+                location: "Western Kenya"
+            }
+        ];
+
+        let currentImageData = null;
+        let currentVideoData = null;
+
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentImageData = e.target.result;
+                    // Show preview in upload section
+                    updateUploadSection();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function previewVideo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentVideoData = e.target.result;
+                    // Show preview in upload section
+                    updateUploadSection();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function updateUploadSection() {
+            const uploadSection = document.querySelector('.upload-form');
+            if (currentImageData || currentVideoData) {
+                uploadSection.innerHTML = `
+                    <div style="margin-bottom: 20px;">
+                        ${currentImageData ? `
+                            <img src="${currentImageData}" style="max-width: 200px; border-radius: 10px; margin-bottom: 10px;">
+                        ` : ''}
+                        ${currentVideoData ? `
+                            <video controls style="max-width: 200px; border-radius: 10px; margin-bottom: 10px;">
+                                <source src="${currentVideoData}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        ` : ''}
+                        <div>
+                            <input type="text" id="postTitle" placeholder="Mission Title" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                            <textarea id="postCaption" placeholder="Share what God did through this mission..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; min-height: 80px; resize: vertical;"></textarea>
+                            <input type="text" id="postLocation" placeholder="Location" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                            <input type="date" id="postDate" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        </div>
+                        <button class="upload-btn" onclick="publishPost()">🚀 Publish Mission Post</button>
+                        <button class="upload-btn" onclick="cancelUpload()">❌ Cancel</button>
+                    </div>
+                `;
+            }
+        }
+
+        function openPostForm() {
+            const uploadSection = document.querySelector('.upload-form');
+            uploadSection.innerHTML = `
+                <div>
+                    <input type="text" id="postTitle" placeholder="Mission Title" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    <textarea id="postCaption" placeholder="Share what God did through this mission..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; min-height: 80px; resize: vertical;"></textarea>
+                    <input type="text" id="postLocation" placeholder="Location" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                    <input type="date" id="postDate" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                <button class="upload-btn" onclick="publishPost()">🚀 Publish Mission Post</button>
+                <button class="upload-btn" onclick="cancelUpload()">❌ Cancel</button>
+            `;
+        }
+
+        function cancelUpload() {
+            currentImageData = null;
+            currentVideoData = null;
+            updateUploadSection();
+        }
+
+        function publishPost() {
+            const title = document.getElementById('postTitle').value;
+            const caption = document.getElementById('postCaption').value;
+            const location = document.getElementById('postLocation').value;
+            const date = document.getElementById('postDate').value;
+
+            if (!title || !caption) {
+                alert('Please fill in both title and caption');
+                return;
+            }
+
+            const newPost = {
+                id: missionPosts.length + 1,
+                title: title,
+                image: currentImageData || `https://via.placeholder.com/600x400/002147/ffffff?text=${encodeURIComponent(title)}`,
+                video: currentVideoData || null,
+                caption: caption,
+                date: date || new Date().toLocaleDateString(),
+                location: location || 'Unknown Location'
+            };
+
+            missionPosts.unshift(newPost);
+            renderMissionPosts();
+            cancelUpload();
+            
+            // Show success message
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.innerHTML = '✅ Mission post published successfully!';
+            successDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #d4edda;
+                color: #155724;
+                padding: 15px;
+                border-radius: 8px;
+                z-index: 1000;
+            `;
+            document.body.appendChild(successDiv);
+
+            setTimeout(() => {
+                document.body.removeChild(successDiv);
+            }, 3000);
+        }
+
+        function renderMissionPosts() {
+            const grid = document.getElementById('missionPostsGrid');
+            if (grid) {
+                grid.innerHTML = missionPosts.map((post, index) => `
+                    <div class="mission-post fade-in-up" style="animation-delay: ${index * 0.1}s;">
+                        ${post.image ? `
+                            <div class="mission-image-container">
+                                <img src="${post.image}" alt="${post.title}" class="mission-image">
+                            </div>
+                        ` : ''}
+                        ${post.video ? `
+                            <div class="mission-video-container">
+                                <video controls style="width: 100%; border-radius: 10px;">
+                                    <source src="${post.video}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                        ` : ''}
+                        <div class="mission-content">
+                            <h3 class="mission-title">${post.title}</h3>
+                            <p class="mission-caption">${post.caption}</p>
+                            <div class="mission-meta">
+                                <span class="mission-date">${post.date}</span>
+                                <div class="mission-location">
+                                    <i data-lucide="map-pin"></i>
+                                    <span>${post.location}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Initialize the page
+        lucide.createIcons();
+        renderMissionPosts();
+    </script>
+</body>
+</html>
