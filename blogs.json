@@ -1,0 +1,17 @@
+[
+  {
+    "id": "6e6a09ec-6e28-42a3-9591-75885fcb3a3d",
+    "title": "Test Blog",
+    "author": "Test Author",
+    "category": "Test",
+    "content": "This is a test blog post",
+    "image": "",
+    "tags": [
+      "test"
+    ],
+    "date": "April 08, 2026",
+    "created_at": "2026-04-08T19:59:10.525610",
+    "updated_at": "2026-04-08T19:59:10.525619",
+    "readTime": "1 min read"
+  }
+]

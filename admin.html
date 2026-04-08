@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Walking With Jesus Christ</title>
+    <link rel="stylesheet" href="/src/style.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Lato', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fb 0%, #e4ebf8 100%);
+            color: #1f2937;
+        }
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 32px auto;
+            padding: 0 16px 24px;
+            min-height: calc(100vh - 64px);
+            align-items: start;
+        }
+        .sidebar {
+            background: #0f172a;
+            border-radius: 16px;
+            padding: 20px;
+            color: #e2e8f0;
+            border: 1px solid rgba(148,163,184,0.3);
+            box-shadow: 0 14px 30px rgba(15,23,42,0.2);
+        }
+        .sidebar h2 {
+            margin: 0 0 10px;
+            color: #f8fafc;
+            font-size: 1rem;
+            letter-spacing: 0.6px;
+        }
+        .sidebar p {
+            margin: 0 0 16px;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .sidebar nav a {
+            display: block;
+            color: #dbeafe;
+            text-decoration: none;
+            margin-bottom: 10px;
+            padding: 10px 12px;
+            border-radius: 9px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: background 0.18s ease, color 0.18s ease;
+        }
+        .sidebar nav a:hover {
+            background: #1e293b;
+            color: #fff;
+        }
+        .sidebar nav a.active {
+            background: #2563eb;
+            color: #fff;
+            box-shadow: 0 6px 12px rgba(37,99,235,0.28);
+        }
+
+        .admin-container {
+            background: #fff;
+            border-radius: 16px;
+            margin: 40px auto;
+            padding: 30px;
+            border-radius: 16px;
+            background: #ffffff;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+        }
+        .admin-container h1 {
+            margin: 0 0 10px;
+            color: #0f172a;
+            font-size: 2rem;
+        }
+        .admin-container p {
+            margin: 0 0 20px;
+            color: #334155;
+            font-size: 1rem;
+        }
+        .admin-section {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+        .admin-form {
+            display: grid;
+            gap: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .form-group label {
+            font-weight: 600;
+            color: var(--text);
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        .btn-admin {
+            background: var(--gold);
+            color: var(--white);
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        .btn-logout {
+            background: #1f2937;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 9px 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .btn-logout:hover {
+            background: #111827;
+        }
+        .btn-admin:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+        }
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #c3e6cb;
+        }
+        .content-item {
+            background: var(--bg-alt);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--gold);
+        }
+        .content-list {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        .content-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .content-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        .content-list::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 3px;
+        }
+        .tab-navigation {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text);
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+        }
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--gold);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        .login-overlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(14, 22, 33, 0.85);
+            z-index: 9999;
+            padding: 20px;
+        }
+        .login-card {
+            width: min(460px, 100%);
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+            padding: 30px;
+            text-align: center;
+            font-family: 'Lato', sans-serif;
+        }
+        .login-card h2 {
+            margin-bottom: 16px;
+            color: #1f2937;
+        }
+        .login-card input {
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px 14px;
+            border: 1px solid #bcc7d4;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .login-card button {
+            margin-top: 20px;
+            width: 100%;
+            background: #1e40af;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .login-card button:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+    <div id="loginOverlay" class="login-overlay" aria-modal="true" role="dialog">
+        <div class="login-card">
+            <h2>Admin Access Required</h2>
+            <p>Enter your administrator password to continue.</p>
+            <input id="adminPassword" type="password" placeholder="Password" aria-label="Admin Password" autofocus>
+            <button id="loginSubmit">Log In</button>
+            <p id="loginError" style="color: #dc2626; margin-top: 12px; display: none; font-size: 0.9rem;">Invalid password. Try again.</p>
+        </div>
+    </div>
+    <div class="layout-grid" id="layoutGrid">
+        <aside class="sidebar">
+            <h2>Admin Console</h2>
+            <p>Control site content & settings</p>
+            <nav>
+                <a href="#" data-tab="sermons" onclick="showTab('sermons', this)">Sermons</a>
+                <a href="#" data-tab="verse" onclick="showTab('verse', this)">Daily Verse</a>
+                <a href="#" data-tab="quote" onclick="showTab('quote', this)">Quote of Day</a>
+                <a href="#" data-tab="testimony" onclick="showTab('testimony', this)">Testimonies</a>
+                <a href="#" data-tab="missions" onclick="showTab('missions', this)">Missions</a>
+                <a href="#" data-tab="blogs" class="active" onclick="showTab('blogs', this)">Blogs</a>
+                <a href="#" data-tab="contact" onclick="showTab('contact', this)">Contact</a>
+            </nav>
+            <button id="logoutBtn" class="btn-logout">Sign Out</button>
+        </aside>
+        <div class="admin-container" style="display: none;">
+            <div class="admin-header" style="display:flex; align-items:center; justify-content:space-between; gap:15px; margin-bottom:18px;">
+                <h1>Admin Panel</h1>
+            </div>
+        <p style="color: var(--text-light); margin-bottom: 30px;">Update your website content without touching code</p>
+
+        <div class="tab-navigation">
+            <button class="tab-btn" onclick="showTab('sermons', this)">📝 Sermons</button>
+            <button class="tab-btn" onclick="showTab('verse', this)">📖 Daily Verse</button>
+            <button class="tab-btn" onclick="showTab('quote', this)">💭 Quote of Day</button>
+            <button class="tab-btn" onclick="showTab('testimony', this)">✝️ Testimonies</button>
+            <button class="tab-btn" onclick="showTab('missions', this)">🌍 Missions</button>
+            <button class="tab-btn active" onclick="showTab('blogs', this)">📝 Blogs</button>
+            <button class="tab-btn" onclick="showTab('contact', this)">📞 Contact</button>
+        </div>
+
+        <!-- Sermons Tab -->
+        <div id="sermons" class="tab-content">
+            <div class="admin-section">
+                <h2>📝 Update Sermons</h2>
+                <p style="color: var(--text-light); margin-bottom: 20px;">
+                    Update sermon content. <strong>After updating, click "Reload Main Site" or manually refresh the main website page to see changes.</strong>
+                </p>
+                <form class="admin-form" onsubmit="updateSermons(event)">
+                    <div class="form-group">
+                        <label>Sermon 1 Title</label>
+                        <input type="text" id="sermon1-title" value="The Power of Grace">
+                    </div>
+                    <div class="form-group">
+                        <label>Sermon 1 Date</label>
+                        <input type="date" id="sermon1-date" value="2026-03-09">
+                    </div>
+                    <div class="form-group">
+                        <label>Sermon 1 Audio URL</label>
+                        <input type="url" id="sermon1-audio" value="https://example.com/audio/sermon1.mp3" placeholder="https://example.com/audio/sermon1.mp3">
+                    </div>
+                    <div class="form-group">
+                        <label>Sermon 1 Video URL (Any YouTube format)</label>
+                        <input type="url" id="sermon1-video" value="https://www.youtube.com/live/WUWH9zpGdzQ?si=_5cgy5z_lejBUG1k" placeholder="Any YouTube URL">
+                        <small style="color: #666; font-size: 0.85em; display: block; margin-top: 5px;">
+                            <strong>All Formats Supported:</strong><br>
+                            • Live Stream: https://www.youtube.com/live/WUWH9zpGdzQ?si=...<br>
+                            • Regular: https://www.youtube.com/watch?v=VIDEO_ID<br>
+                            • Short: https://youtu.be/VIDEO_ID<br>
+                            • Embed: https://www.youtube.com/embed/VIDEO_ID<br>
+                            <strong>Just paste any YouTube URL - system will handle conversion!</strong>
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label>Sermon 1 Background Image (Optional)</label>
+                        <input type="url" id="sermon1-bg-image" value="https://picsum.photos/seed/grace-power/400/300.jpg" placeholder="https://picsum.photos/seed/theme/400/300.jpg">
+                        <small style="color: #666; font-size: 0.85em; display: block; margin-top: 5px;">
+                            Leave blank to use default. Use images that match the sermon theme.
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label>Sermon 1 Notes</label>
+                        <textarea id="sermon1-notes" rows="4">Key Points:<br>1. Grace is God's unmerited favor<br>2. It transforms our daily walk with Christ<br>3. Available to all who believe in Jesus<br>4. March theme: New beginnings in Christ</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Sermon 2 Title</label>
+                        <input type="text" id="sermon2-title" value="Walking in Faith">
+                    </div>
+                    <div class="form-group">
+                        <label>Sermon 2 Date</label>
+                        <input type="date" id="sermon2-date" value="2026-03-16">
+                    </div>
+                    <div class="form-group">
+                        <label>Sermon 2 Audio URL</label>
+                        <input type="url" id="sermon2-audio" value="https://example.com/audio/sermon2.mp3" placeholder="https://example.com/audio/sermon2.mp3">
+                    </div>
+                    <div class="form-group">
+                        <label>Sermon 2 Video URL (Any YouTube format)</label>
+                        <input type="url" id="sermon2-video" value="https://www.youtube.com/embed/ZHCNvyI8sZA" placeholder="Any YouTube URL">
+                        <small style="color: #666; font-size: 0.85em; display: block; margin-top: 5px;">
+                            Format: https://www.youtube.com/embed/VIDEO_ID<br>
+                            Example: https://www.youtube.com/embed/ZHCNvyI8sZA<br>
+                            Convert from: https://youtu.be/ZHCNvyI8sZA
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label>Sermon 2 Background Image (Optional)</label>
+                        <input type="url" id="sermon2-bg-image" value="https://picsum.photos/seed/walking-faith/400/300.jpg" placeholder="https://picsum.photos/seed/theme/400/300.jpg">
+                        <small style="color: #666; font-size: 0.85em; display: block; margin-top: 5px;">
+                            Leave blank to use default. Use images that match the sermon theme.
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label>Sermon 2 Notes</label>
+                        <textarea id="sermon2-notes" rows="4">Key Points:<br>1. Faith is trusting God without seeing<br>2. Hebrews 11 defines faith clearly<br>3. Faith pleases God<br>4. March focus: Walking forward in spiritual growth</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Sermon 3 Title</label>
+                        <input type="text" id="sermon3-title" value="The Fruit of the Spirit">
+                    </div>
+                    <div class="form-group">
+                        <label>Sermon 3 Date</label>
+                        <input type="date" id="sermon3-date" value="2026-03-23">
+                    </div>
+                    <div class="form-group">
+                        <label>Sermon 3 Audio URL</label>
+                        <input type="url" id="sermon3-audio" value="https://example.com/audio/sermon3.mp3" placeholder="https://example.com/audio/sermon3.mp3">
+                    </div>
+                    <div class="form-group">
+                        <label>Sermon 3 Video URL (Any YouTube format)</label>
+                        <input type="url" id="sermon3-video" value="https://www.youtube.com/embed/xyz789uvw012" placeholder="Any YouTube URL">
+                    </div>
+                    <div class="form-group">
+                        <label>Sermon 3 Background Image (Optional)</label>
+                        <input type="url" id="sermon3-bg-image" value="https://picsum.photos/seed/fruit-spirit/400/300.jpg" placeholder="https://picsum.photos/seed/theme/400/300.jpg">
+                        <small style="color: #666; font-size: 0.85em; display: block; margin-top: 5px;">
+                            Leave blank to use default. Use images that match the sermon theme.
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label>Sermon 3 Notes</label>
+                        <textarea id="sermon3-notes" rows="4">Key Points:<br>1. The Spirit produces fruit in believers<br>2. Love, joy, peace are key fruits<br>3. Evidence of Spirit's work<br>4. March emphasis: Bearing spiritual fruit this season</textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-admin" onclick="updateSermons(event)">Update Sermons</button>
+                    <button type="button" class="btn-admin" onclick="testUpdate()" style="margin-left: 10px; background: #28a745;">Test Update</button>
+                    <button type="button" class="btn-admin" onclick="forceRefresh()" style="margin-left: 10px; background: #ff6b6b;">Force Refresh</button>
+                    <button type="button" class="btn-admin" onclick="reloadMainSite()" style="margin-left: 10px; background: #007bff;">Reload Main Site</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Daily Verse Tab -->
+        <div id="verse" class="tab-content">
+            <div class="admin-section">
+                <h2>📖 Update Daily Verse</h2>
+                <form class="admin-form" onsubmit="updateVerse(event)">
+                    <div class="form-group">
+                        <label>Verse Text</label>
+                        <textarea id="verse-text" rows="3">"The Lord is my shepherd; I shall not want."</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Verse Reference</label>
+                        <input type="text" id="verse-ref" value="Psalm 23:1">
+                    </div>
+                    <button type="submit" class="btn-admin">Update Verse</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Quote of Day Tab -->
+        <div id="quote" class="tab-content">
+            <div class="admin-section">
+                <h2>💭 Update Quote of the Day</h2>
+                <form class="admin-form" onsubmit="updateQuote(event)">
+                    <div class="form-group">
+                        <label>Quote Text</label>
+                        <textarea id="quote-text" rows="3">"Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight."</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Quote Reference</label>
+                        <input type="text" id="quote-ref" value="Proverbs 3:5-6">
+                    </div>
+                    <div class="form-group">
+                        <label>Reflection</label>
+                        <textarea id="quote-reflection" rows="4">The verse reminds us that even when life feels uncertain, we are encouraged to trust God fully rather than relying only on our limited understanding. Faith and guidance often come when we surrender our plans and allow God to lead the way.</textarea>
+                    </div>
+                    <button type="submit" class="btn-admin">Update Quote</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Testimonies Tab -->
+        <div id="testimony" class="tab-content">
+            <div class="admin-section">
+                <h2>✝️ Update Testimonies</h2>
+                <form class="admin-form" onsubmit="updateTestimonies(event)">
+                    <div class="form-group">
+                        <label>Testimony 1 Name</label>
+                        <input type="text" id="test1-name" value="Michael Njoroge">
+                    </div>
+                    <div class="form-group">
+                        <label>Testimony 1 Year Saved</label>
+                        <input type="text" id="test1-year" value="2021">
+                    </div>
+                    <div class="form-group">
+                        <label>Testimony 1 Story</label>
+                        <textarea id="test1-story" rows="3">"I was lost in addiction and despair until someone shared the Gospel with me. Jesus didn't just fix my life; He gave me a brand new one."</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Testimony 2 Name</label>
+                        <input type="text" id="test2-name" value="Wekesa John">
+                    </div>
+                    <div class="form-group">
+                        <label>Testimony 2 Year Saved</label>
+                        <input type="text" id="test2-year" value="2018">
+                    </div>
+                    <div class="form-group">
+                        <label>Testimony 2 Story</label>
+                        <textarea id="test2-story" rows="3">"Walking with Christ has brought a peace to my heart that I never knew was possible. He is my rock and my constant refuge."</textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-admin">Update Testimonies</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Missions Tab -->
+        <div id="missions" class="tab-content">
+            <div class="admin-section">
+                <h2>🌍 Manage Mission Posts</h2>
+                <p style="color: var(--text-light); margin-bottom: 20px;">Upload photos and create mission stories. <strong>Look for the "Mission Post X Image" fields below each title to upload images.</strong></p>
+                
+                <div class="admin-form" onsubmit="updateMissions(event)">
+                    <div class="form-group">
+                        <label>Mission Post 1 Image</label>
+                        <input type="file" id="mission1-image" accept="image/*" onchange="previewMissionImage(1, event)">
+                        <div id="mission1-image-preview" style="margin-top: 10px;"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Mission Post 1 Title</label>
+                        <input type="text" id="mission1-title" value="Community Outreach Program">
+                    </div>
+                    <div class="form-group">
+                        <label>Mission Post 1 Caption</label>
+                        <textarea id="mission1-caption" rows="4">Our team visited three local villages last month, sharing the Gospel message with over 200 families. We distributed food supplies and prayed with each household, seeing many hearts opened to God's love.</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Mission Post 1 Date</label>
+                        <input type="date" id="mission1-date" value="2026-03-05">
+                    </div>
+                    <div class="form-group">
+                        <label>Mission Post 1 Location</label>
+                        <input type="text" id="mission1-location" value="Rural Villages, Kenya">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Mission Post 2 Image</label>
+                        <input type="file" id="mission2-image" accept="image/*" onchange="previewMissionImage(2, event)">
+                        <div id="mission2-image-preview" style="margin-top: 10px;"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Mission Post 2 Title</label>
+                        <input type="text" id="mission2-title" value="Youth Camp 2026">
+                    </div>
+                    <div class="form-group">
+                        <label>Mission Post 2 Caption</label>
+                        <textarea id="mission2-caption" rows="4">A powerful week of discipleship and spiritual growth with over 50 young people. Many dedicated their lives to Christ through baptism and committed to serving their communities.</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Mission Post 2 Date</label>
+                        <input type="date" id="mission2-date" value="2026-02-28">
+                    </div>
+                    <div class="form-group">
+                        <label>Mission Post 2 Location</label>
+                        <input type="text" id="mission2-location" value="Nairobi, Kenya">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Mission Post 3 Image</label>
+                        <input type="file" id="mission3-image" accept="image/*" onchange="previewMissionImage(3, event)">
+                        <div id="mission3-image-preview" style="margin-top: 10px;"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Mission Post 3 Title</label>
+                        <input type="text" id="mission3-title" value="Medical Mission Trip">
+                    </div>
+                    <div class="form-group">
+                        <label>Mission Post 3 Caption</label>
+                        <textarea id="mission3-caption" rows="4">Our medical team provided free healthcare services to over 300 patients in remote areas. We shared God's love through practical care and prayed for healing of both body and soul.</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Mission Post 3 Date</label>
+                        <input type="date" id="mission3-date" value="2026-02-15">
+                    </div>
+                    <div class="form-group">
+                        <label>Mission Post 3 Location</label>
+                        <input type="text" id="mission3-location" value="Western Kenya">
+                    </div>
+                    
+                    <button type="submit" class="btn-admin">Update Mission Posts</button>
+                </form>
+            </div>
+        </div>
+        <div id="blogs" class="tab-content active">
+            <div class="admin-section">
+                <h2>📝 Manage Blog Posts</h2>
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <button onclick="window.open('/', '_blank')" class="btn-admin" style="background: #2563eb;">View Main Site</button>
+                    <button onclick="window.open('/', '_blank').location.reload()" class="btn-admin" style="background: #059669;">Reload Main Site</button>
+                </div>
+                <p style="color: var(--text-light); margin-bottom: 20px;">
+                    Upload and manage blog documents. Paste content directly or upload files.
+                    <strong>Changes are saved automatically and sync with the main website.</strong>
+                </p>
+
+                <!-- New Blog Form -->
+                <div class="admin-section" style="margin-bottom: 30px;">
+                    <h3>Add New Blog Post</h3>
+                    <form class="admin-form" onsubmit="addBlogPost(event)">
+                        <div class="form-group">
+                            <label>Blog Title</label>
+                            <input type="text" id="blog-title" required placeholder="Enter blog title">
+                        </div>
+                        <div class="form-group">
+                            <label>Author</label>
+                            <input type="text" id="blog-author" value="Habert Oyolla" placeholder="Author name">
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="blog-category">
+                                <option value="Christian Theology">Christian Theology</option>
+                                <option value="Cultural Commentary">Cultural Commentary</option>
+                                <option value="Biblical Interpretation">Biblical Interpretation</option>
+                                <option value="Personal Testimony">Personal Testimony</option>
+                                <option value="Ministry Update">Ministry Update</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Blog Content</label>
+                            <textarea id="blog-content" rows="12" placeholder="Paste your blog content here..." required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Featured Image URL (Optional)</label>
+                            <input type="url" id="blog-image" placeholder="https://example.com/image.jpg">
+                        </div>
+                        <div class="form-group">
+                            <label>Tags (comma-separated)</label>
+                            <input type="text" id="blog-tags" placeholder="faith, prayer, bible">
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button type="submit" class="btn-admin">Publish Blog Post</button>
+                            <button type="button" id="cancel-edit-btn" class="btn-admin" style="background: #6b7280; display: none;" onclick="resetBlogForm()">Cancel Edit</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Existing Blogs List -->
+                <div class="admin-section">
+                    <h3>Published Blog Posts</h3>
+                    <div id="blogs-list" class="content-list">
+                        <!-- Blog posts will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="contact" class="tab-content">
+            <div class="admin-section">
+                <h2>📞 Update Contact Information</h2>
+                <form class="admin-form" onsubmit="updateContact(event)">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="contact-email" value="info@walkingwithjesuschrist.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="contact-phone" value="0707 484 969">
+                    </div>
+                    <div class="form-group">
+                        <label>Facebook URL</label>
+                        <input type="url" id="contact-facebook" value="https://www.facebook.com/share/14XpLTzRyGF/?mibextid=wwXIfr">
+                    </div>
+                    <div class="form-group">
+                        <label>Twitter/X URL</label>
+                        <input type="url" id="contact-twitter" value="https://x.com/habertodhiambo">
+                    </div>
+                    <div class="form-group">
+                        <label>YouTube URL</label>
+                        <input type="url" id="contact-youtube" value="https://youtube.com/@evangelisthabertodhiambo?si=-umSQMUIWOIlbSH1">
+                    </div>
+                    <button type="submit" class="btn-admin">Update Contact</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="success-message" class="success-message" style="display: none;">
+            ✅ Content updated successfully! Refresh your main website to see changes.
+        </div>
+    </div>
+</div>
+
+    <script>
+        // Sermon Data Object - March 2026 Content
+        let sermonData = {
+            sermon1: {
+                title: "The Power of Grace",
+                audio: "https://example.com/audio/sermon1.mp3",
+                video: "https://www.youtube.com/embed/WUWH9zpGdzQ",
+                bgImage: "https://picsum.photos/seed/grace-power/400/300.jpg",
+                notes: "Key Points:<br>1. Grace is God's unmerited favor<br>2. It transforms our daily walk with Christ<br>3. Available to all who believe in Jesus<br>4. March theme: New beginnings in Christ"
+            },
+            sermon2: {
+                title: "Walking in Faith",
+                audio: "https://example.com/audio/sermon2.mp3",
+                video: "https://www.youtube.com/embed/ZHCNvyI8sZA",
+                bgImage: "https://picsum.photos/seed/walking-faith/400/300.jpg",
+                notes: "Key Points:<br>1. Faith is trusting God without seeing<br>2. Hebrews 11 defines faith clearly<br>3. Faith pleases God<br>4. March focus: Walking forward in spiritual growth"
+            },
+            sermon3: {
+                title: "The Fruit of the Spirit",
+                audio: "https://example.com/audio/sermon3.mp3",
+                video: "https://www.youtube.com/embed/xyz789uvw012",
+                bgImage: "https://picsum.photos/seed/fruit-spirit/400/300.jpg",
+                notes: "Key Points:<br>1. The Spirit produces fruit in believers<br>2. Love, joy, peace are key fruits<br>3. Evidence of Spirit's work<br>4. March emphasis: Bearing spiritual fruit this season"
+            },
+            sermon4: {
+                title: "Divine Healing",
+                audio: "https://example.com/audio/sermon4.mp3",
+                video: "https://www.youtube.com/embed/healing123",
+                bgImage: "https://picsum.photos/seed/divine-healing/400/300.jpg",
+                notes: "Key Points:<br>1. Healing is in God's nature<br>2. Faith activates divine healing<br>3. Jesus healed all who came to Him<br>4. March focus: Wholeness in Christ"
+            },
+            sermon5: {
+                title: "Prayer That Moves Mountains",
+                audio: "https://example.com/audio/sermon5.mp3",
+                video: "https://www.youtube.com/embed/prayer456",
+                bgImage: "https://picsum.photos/seed/mountain-prayer/400/300.jpg",
+                notes: "Key Points:<br>1. Prayer is communication with God<br>2. Persistent prayer brings results<br>3. Prayer changes circumstances<br>4. March focus: Powerful prayer life"
+            },
+            sermon6: {
+                title: "The Blood of Jesus",
+                audio: "https://example.com/audio/sermon6.mp3",
+                video: "https://www.youtube.com/embed/blood789",
+                bgImage: "https://picsum.photos/seed/blood-jesus/400/300.jpg",
+                notes: "Key Points:<br>1. The blood brings forgiveness<br>2. The blood brings protection<br>3. The blood brings healing<br>4. March focus: Power in the blood"
+            },
+            sermon7: {
+                title: "Kingdom Living",
+                audio: "https://example.com/audio/sermon7.mp3",
+                video: "https://www.youtube.com/embed/kingdom012",
+                bgImage: "https://picsum.photos/seed/kingdom-living/400/300.jpg",
+                notes: "Key Points:<br>1. Kingdom principles are contrary to worldly ways<br>2. Seek first God's kingdom<br>3. Kingdom living brings peace<br>4. March focus: Kingdom mindset"
+            },
+            sermon8: {
+                title: "Victory in Christ",
+                audio: "https://example.com/audio/sermon8.mp3",
+                video: "https://www.youtube.com/embed/victory345",
+                bgImage: "https://picsum.photos/seed/victory-christ/400/300.jpg",
+                notes: "Key Points:<br>1. Victory is assured in Christ<br>2. Overcome through faith<br>3. Victory over sin and death<br>4. March focus: Triumphant living"
+            },
+            sermon9: {
+                title: "The Holy Spirit's Power",
+                audio: "https://example.com/audio/sermon9.mp3",
+                video: "https://www.youtube.com/embed/spirit678",
+                bgImage: "https://picsum.photos/seed/holy-spirit-power/400/300.jpg",
+                notes: "Key Points:<br>1. The Spirit empowers believers<br>2. Spiritual gifts for ministry<br>3. Led by the Spirit daily<br>4. March focus: Spirit-filled life"
+            },
+            sermon10: {
+                title: "Overcoming Fear",
+                audio: "https://example.com/audio/sermon10.mp3",
+                video: "https://www.youtube.com/embed/overcome789",
+                bgImage: "https://picsum.photos/seed/overcoming-fear/400/300.jpg",
+                notes: "Key Points:<br>1. Perfect love casts out fear<br>2. God has not given us a spirit of fear<br>3. Faith overcomes fear<br>4. April focus: Courage in Christ"
+            },
+            sermon11: {
+                title: "The Name of Jesus",
+                audio: "https://example.com/audio/sermon11.mp3",
+                video: "https://www.youtube.com/embed/name-jesus012",
+                bgImage: "https://picsum.photos/seed/name-jesus/400/300.jpg",
+                notes: "Key Points:<br>1. At the name of Jesus every knee shall bow<br>2. Authority in Jesus' name<br>3. Praying in Jesus' name<br>4. April focus: Power in His name"
+            },
+            sermon12: {
+                title: "Divine Protection",
+                audio: "https://example.com/audio/sermon12.mp3",
+                video: "https://www.youtube.com/embed/protection345",
+                bgImage: "https://picsum.photos/seed/divine-protection/400/300.jpg",
+                notes: "Key Points:<br>1. God is our refuge and fortress<br>2. Angelic protection for believers<br>3. Psalm 91 promises<br>4. April focus: Safety in God"
+            },
+            sermon13: {
+                title: "The Word of God",
+                audio: "https://example.com/audio/sermon13.mp3",
+                video: "https://www.youtube.com/embed/word-god678",
+                bgImage: "https://picsum.photos/seed/word-god/400/300.jpg",
+                notes: "Key Points:<br>1. The Word is living and powerful<br>2. Sword of the Spirit<br>3. Meditating on Scripture<br>4. April focus: Living by the Word"
+            },
+            sermon14: {
+                title: "Worship in Spirit",
+                audio: "https://example.com/audio/sermon14.mp3",
+                video: "https://www.youtube.com/embed/worship901",
+                bgImage: "https://picsum.photos/seed/worship-spirit/400/300.jpg",
+                notes: "Key Points:<br>1. God seeks true worshippers<br>2. Worship in spirit and truth<br>3. Sacrifice of praise<br>4. April focus: Heart of worship"
+            },
+            sermon15: {
+                title: "End Times Preparation",
+                audio: "https://example.com/audio/sermon15.mp3",
+                video: "https://www.youtube.com/embed/endtimes234",
+                bgImage: "https://picsum.photos/seed/end-times/400/300.jpg",
+                notes: "Key Points:<br>1. Be ready for Christ's return<br>2. Signs of the times<br>3. Living with expectancy<br>4. April focus: Watch and pray"
+            }
+        };
+
+        const ADMIN_PASSWORD = 'habert';
+        const loginOverlay = document.getElementById('loginOverlay');
+        const layoutGrid = document.getElementById('layoutGrid');
+        const adminPanel = document.querySelector('.admin-container');
+        const passwordInput = document.getElementById('adminPassword');
+        const loginSubmitBtn = document.getElementById('loginSubmit');
+        const loginError = document.getElementById('loginError');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        function lockAdminPanel() {
+            adminPanel.style.display = 'none';
+            layoutGrid.style.display = 'none';
+            loginOverlay.style.display = 'flex';
+        }
+
+        function unlockAdminPanel() {
+            adminPanel.style.display = 'block';
+            layoutGrid.style.display = 'grid';
+            loginOverlay.style.display = 'none';
+            localStorage.setItem('adminAuthenticated', 'true');
+        }
+
+        function validateAdminPassword() {
+            const value = passwordInput.value.trim();
+            if (value === ADMIN_PASSWORD) {
+                unlockAdminPanel();
+                loginError.style.display = 'none';
+            } else {
+                loginError.style.display = 'block';
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        }
+
+        // Load saved data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('adminAuthenticated') === 'true') {
+                unlockAdminPanel();
+            } else {
+                lockAdminPanel();
+            }
+
+            loginSubmitBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                validateAdminPassword();
+            });
+            passwordInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    validateAdminPassword();
+                }
+            });
+            logoutBtn.addEventListener('click', function() {
+                localStorage.removeItem('adminAuthenticated');
+                passwordInput.value = '';
+                lockAdminPanel();
+            });
+
+            const savedSermonData = localStorage.getItem('sermonData');
+            if (savedSermonData) {
+                sermonData = JSON.parse(savedSermonData);
+                // Update form fields with saved data
+                document.getElementById('sermon1-title').value = sermonData.sermon1.title;
+                document.getElementById('sermon1-audio').value = sermonData.sermon1.audio;
+                document.getElementById('sermon1-video').value = sermonData.sermon1.video;
+                document.getElementById('sermon1-bg-image').value = sermonData.sermon1.bgImage || '';
+                document.getElementById('sermon1-notes').value = sermonData.sermon1.notes;
+
+                document.getElementById('sermon2-title').value = sermonData.sermon2.title;
+                document.getElementById('sermon2-audio').value = sermonData.sermon2.audio;
+                document.getElementById('sermon2-video').value = sermonData.sermon2.video;
+                document.getElementById('sermon2-bg-image').value = sermonData.sermon2.bgImage || '';
+                document.getElementById('sermon2-notes').value = sermonData.sermon2.notes;
+
+                document.getElementById('sermon3-title').value = sermonData.sermon3.title;
+                document.getElementById('sermon3-audio').value = sermonData.sermon3.audio;
+                document.getElementById('sermon3-video').value = sermonData.sermon3.video;
+                document.getElementById('sermon3-bg-image').value = sermonData.sermon3.bgImage || '';
+                document.getElementById('sermon3-notes').value = sermonData.sermon3.notes;
+            }
+
+            // Load blog posts
+            loadBlogPosts();
+        });
+
+        function previewMissionImage(missionNumber, event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewDiv = document.getElementById(`mission${missionNumber}-image-preview`);
+                    previewDiv.innerHTML = `<img src="${e.target.result}" style="max-width: 200px; border-radius: 5px; margin-top: 10px;">`;
+                    
+                    // Store image data for later use
+                    if (!window.missionImages) window.missionImages = {};
+                    window.missionImages[`mission${missionNumber}`] = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function updateMissions(event) {
+            event.preventDefault();
+            
+            // Validate all fields
+            const mission1Title = document.getElementById('mission1-title').value.trim();
+            const mission1Caption = document.getElementById('mission1-caption').value.trim();
+            const mission1Date = document.getElementById('mission1-date').value;
+            const mission1Location = document.getElementById('mission1-location').value.trim();
+            
+            const mission2Title = document.getElementById('mission2-title').value.trim();
+            const mission2Caption = document.getElementById('mission2-caption').value.trim();
+            const mission2Date = document.getElementById('mission2-date').value;
+            const mission2Location = document.getElementById('mission2-location').value.trim();
+            
+            const mission3Title = document.getElementById('mission3-title').value.trim();
+            const mission3Caption = document.getElementById('mission3-caption').value.trim();
+            const mission3Date = document.getElementById('mission3-date').value;
+            const mission3Location = document.getElementById('mission3-location').value.trim();
+            
+            // Check if at least one mission has valid data
+            const hasValidMission = mission1Title && mission1Caption || 
+                                   mission2Title && mission2Caption || 
+                                   mission3Title && mission3Caption;
+            
+            if (!hasValidMission) {
+                alert('Please fill in title and caption for at least one mission post');
+                return;
+            }
+            
+            // Update mission posts data and save to localStorage
+            const missionPosts = [
+                {
+                    title: mission1Title,
+                    caption: mission1Caption,
+                    date: mission1Date,
+                    location: mission1Location,
+                    image: window.missionImages?.mission1 || "https://via.placeholder.com/600x400/002147/ffffff?text=Community+Outreach"
+                },
+                {
+                    title: mission2Title,
+                    caption: mission2Caption,
+                    date: mission2Date,
+                    location: mission2Location,
+                    image: window.missionImages?.mission2 || "https://via.placeholder.com/600x400/002147/ffffff?text=Youth+Camp+2026"
+                },
+                {
+                    title: mission3Title,
+                    caption: mission3Caption,
+                    date: mission3Date,
+                    location: mission3Location,
+                    image: window.missionImages?.mission3 || "https://via.placeholder.com/600x400/002147/ffffff?text=Medical+Mission"
+                }
+            ];
+            
+            // Save to localStorage for persistence
+            localStorage.setItem('missionData', JSON.stringify(missionPosts));
+            
+            // Send mission data to main website with proper event structure
+            if (window.opener || localStorage.getItem('mainWebsiteSync')) {
+                window.opener?.postMessage({
+                    type: 'missionUpdate',
+                    data: missionPosts
+                }, '*');
+            }
+            
+            showSuccess();
+        }
+
+        function showTab(tabName, button) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Remove active class from tab buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Remove active class from sidebar links
+            const links = document.querySelectorAll('.sidebar nav a');
+            links.forEach(link => link.classList.remove('active'));
+
+            // Show selected tab
+            const selected = document.getElementById(tabName);
+            if (selected) selected.classList.add('active');
+
+            if (button) {
+                button.classList.add('active');
+            }
+
+            links.forEach(link => {
+                if (link.dataset.tab === tabName) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        function showSuccess() {
+            const message = document.getElementById('success-message');
+            message.style.display = 'block';
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 3000);
+            
+            // Sync with main website if it's open
+            syncMainWebsite();
+        }
+
+        function syncMainWebsite() {
+            console.log('Syncing with main website...');
+            // Check if main website is open in another tab/window
+            if (window.opener || localStorage.getItem('mainWebsiteSync')) {
+                console.log('Sending sermon data to main website:', sermonData);
+                // Send updated data to main website
+                window.opener?.postMessage({
+                    type: 'sermonUpdate',
+                    data: sermonData
+                }, '*');
+            } else {
+                console.log('Main website not detected, trying localStorage sync...');
+                // Try to sync via localStorage for same-tab updates
+                localStorage.setItem('sermonUpdate', JSON.stringify({
+                    type: 'sermonUpdate',
+                    data: sermonData,
+                    timestamp: Date.now()
+                }));
+            }
+        }
+
+        // Convert any YouTube URL to embed format
+        function convertToEmbed(url) {
+            if (!url) return '';
+            
+            // Handle different YouTube URL formats
+            if (url.includes('/live/')) {
+                // Live stream: https://www.youtube.com/live/VIDEO_ID?si=...
+                const match = url.match(/\/live\/([^?]+)/);
+                if (match) {
+                    return `https://www.youtube.com/embed/${match[1]}`;
+                }
+            } else if (url.includes('youtu.be/')) {
+                // Short URL: https://youtu.be/VIDEO_ID
+                const match = url.match(/youtu\.be\/([^?]+)/);
+                if (match) {
+                    return `https://www.youtube.com/embed/${match[1]}`;
+                }
+            } else if (url.includes('watch?v=')) {
+                // Regular URL: https://www.youtube.com/watch?v=VIDEO_ID
+                const match = url.match(/watch\?v=([^&]+)/);
+                if (match) {
+                    return `https://www.youtube.com/embed/${match[1]}`;
+                }
+            } else if (url.includes('/embed/')) {
+                // Already embed format
+                return url;
+            }
+            
+            // If no pattern matches, return original
+            return url;
+        }
+
+        function testUpdate() {
+            console.log('Test button clicked!');
+            alert('Test button works! Now try the Update Sermons button.');
+        }
+
+        function reloadMainSite() {
+            console.log('Reloading main website...');
+            try {
+                // Try to reload the main website
+                const mainWindow = window.open('http://localhost:8000', 'main');
+                if (mainWindow && !mainWindow.closed) {
+                    mainWindow.location.reload();
+                    console.log('Main website reloaded');
+                } else {
+                    // Open new window if not found
+                    window.open('http://localhost:8000', '_blank');
+                    console.log('Opened new main website window');
+                }
+                alert('Main website reloaded! Your changes should now be visible.');
+            } catch (e) {
+                console.error('Failed to reload main site:', e);
+                // Fallback - just open new window
+                window.open('http://localhost:8000', '_blank');
+                alert('Opened new main website window. Your changes should be visible there.');
+            }
+        }
+
+        function forceRefresh() {
+            console.log('Force refreshing main website...');
+            // Trigger immediate update
+            localStorage.setItem('sermonUpdate', JSON.stringify({
+                type: 'sermonUpdate',
+                data: sermonData,
+                timestamp: Date.now(),
+                force: true
+            }));
+            
+            // Try to refresh the main website if it's open
+            if (window.opener) {
+                window.opener.postMessage({
+                    type: 'forceRefresh',
+                    data: sermonData
+                }, '*');
+            }
+            
+            alert('Force refresh triggered! Check main website for updates.');
+        }
+
+        function updateSermons(event) {
+            event.preventDefault();
+            
+            console.log('Updating sermons...');
+            
+            // Update sermon data object with form values
+            sermonData.sermon1 = {
+                title: document.getElementById('sermon1-title').value,
+                audio: document.getElementById('sermon1-audio').value,
+                video: convertToEmbed(document.getElementById('sermon1-video').value),
+                bgImage: document.getElementById('sermon1-bg-image').value,
+                notes: document.getElementById('sermon1-notes').value
+            };
+            
+            sermonData.sermon2 = {
+                title: document.getElementById('sermon2-title').value,
+                audio: document.getElementById('sermon2-audio').value,
+                video: convertToEmbed(document.getElementById('sermon2-video').value),
+                bgImage: document.getElementById('sermon2-bg-image').value,
+                notes: document.getElementById('sermon2-notes').value
+            };
+            
+            sermonData.sermon3 = {
+                title: document.getElementById('sermon3-title').value,
+                audio: document.getElementById('sermon3-audio').value,
+                video: convertToEmbed(document.getElementById('sermon3-video').value),
+                bgImage: document.getElementById('sermon3-bg-image').value,
+                notes: document.getElementById('sermon3-notes').value
+            };
+            
+            console.log('Updated sermonData:', sermonData);
+            
+            // Save to localStorage for persistence
+            localStorage.setItem('sermonData', JSON.stringify(sermonData));
+            console.log('Saved to localStorage');
+            
+            // Direct update - try to update main website directly
+            try {
+                // Try to find and update the main website window
+                const mainWindow = window.open('', 'main').window;
+                if (mainWindow && !mainWindow.closed) {
+                    console.log('Found main window, updating directly...');
+                    // Update sermon titles directly
+                    const title1 = mainWindow.document.getElementById('sermon-title-1');
+                    const title2 = mainWindow.document.getElementById('sermon-title-2');
+                    const title3 = mainWindow.document.getElementById('sermon-title-3');
+                    
+                    if (title1) title1.textContent = sermonData.sermon1.title;
+                    if (title2) title2.textContent = sermonData.sermon2.title;
+                    if (title3) title3.textContent = sermonData.sermon3.title;
+                    
+                    console.log('Direct DOM update completed');
+                }
+            } catch (e) {
+                console.log('Direct update failed, using fallback methods');
+            }
+            
+            // Force immediate update to main website via localStorage
+            localStorage.setItem('sermonUpdate', JSON.stringify({
+                type: 'sermonUpdate',
+                data: sermonData,
+                timestamp: Date.now()
+            }));
+            console.log('Triggered immediate localStorage update');
+            
+            // Update main website sermon cards immediately
+            updateSermonCard(1);
+            updateSermonCard(2);
+            updateSermonCard(3);
+            
+            // Sync with main website if it's open
+            syncMainWebsite();
+            
+            showSuccess();
+        }
+
+        function updateSermonCard(cardNumber) {
+            const sermonId = `sermon${cardNumber}`;
+            const sermon = sermonData[sermonId];
+            
+            if (sermon) {
+                // Update main website if it's open
+                if (window.opener) {
+                    window.opener.postMessage({
+                        type: 'sermonCardUpdate',
+                        data: {
+                            cardNumber: cardNumber,
+                            sermon: sermon
+                        }
+                    }, '*');
+                }
+            }
+        }
+
+        function updateVerse(event) {
+            event.preventDefault();
+            document.getElementById('verse-text-display').textContent = document.getElementById('verse-text').value;
+            document.getElementById('verse-ref-display').textContent = document.getElementById('verse-ref').value;
+            showSuccess();
+        }
+
+        function updateQuote(event) {
+            event.preventDefault();
+            document.querySelector('.quote-text').textContent = document.getElementById('quote-text').value;
+            document.querySelector('.quote-reference').textContent = '— ' + document.getElementById('quote-ref').value;
+            document.querySelector('.reflection-text').textContent = document.getElementById('quote-reflection').value;
+            showSuccess();
+        }
+
+        function updateTestimonies(event) {
+            event.preventDefault();
+            
+            // Update testimony 1
+            document.querySelector('.testimony-card:nth-child(1) h4').textContent = document.getElementById('test1-name').value;
+            document.querySelector('.testimony-card:nth-child(1) .testimony-date').textContent = 'Saved in ' + document.getElementById('test1-year').value;
+            document.querySelector('.testimony-card:nth-child(1) p').textContent = document.getElementById('test1-story').value;
+            
+            // Update testimony 2
+            document.querySelector('.testimony-card:nth-child(2) h4').textContent = document.getElementById('test2-name').value;
+            document.querySelector('.testimony-card:nth-child(2) .testimony-date').textContent = 'Saved in ' + document.getElementById('test2-year').value;
+            document.querySelector('.testimony-card:nth-child(2) p').textContent = document.getElementById('test2-story').value;
+            
+            showSuccess();
+        }
+
+        // Blog Management Functions
+        let blogPosts = [];
+        const API_BASE = 'http://localhost:5000/api';
+
+        async function loadBlogPosts() {
+            try {
+                const response = await fetch(`${API_BASE}/blogs`);
+                const result = await response.json();
+                if (result.success) {
+                    blogPosts = result.data;
+                } else {
+                    console.error('Failed to load blogs:', result.error);
+                }
+                renderBlogPosts();
+            } catch (error) {
+                console.error('Error loading blogs:', error);
+                renderBlogPosts();
+            }
+        }
+
+        
+        async function addBlogPost(event) {
+            event.preventDefault();
+
+            const title = document.getElementById('blog-title').value.trim();
+            const author = document.getElementById('blog-author').value.trim();
+            const category = document.getElementById('blog-category').value;
+            const content = document.getElementById('blog-content').value.trim();
+            const image = document.getElementById('blog-image').value.trim();
+            const tags = document.getElementById('blog-tags').value.trim();
+
+            if (!title || !content) {
+                alert('Please fill in at least the title and content.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/blogs`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        title,
+                        author,
+                        category,
+                        content,
+                        image,
+                        tags
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    // Clear form
+                    event.target.reset();
+                    document.getElementById('blog-author').value = 'Habert Oyolla';
+
+                    // Reset form mode
+                    resetBlogForm();
+
+                    // Reload blogs
+                    await loadBlogPosts();
+
+                    showSuccess();
+                } else {
+                    alert('Failed to create blog post: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error creating blog post:', error);
+                alert('Error creating blog post. Please try again.');
+            }
+        }
+
+        function renderBlogPosts() {
+            const blogsList = document.getElementById('blogs-list');
+            if (!blogsList) return;
+
+            if (blogPosts.length === 0) {
+                blogsList.innerHTML = '<p style="color: var(--text-light); text-align: center; padding: 40px;">No blog posts yet. Add your first blog post above!</p>';
+                return;
+            }
+
+            blogsList.innerHTML = blogPosts.map(blog => `
+                <div class="content-item" style="position: relative;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                        <div>
+                            <h4 style="margin: 0 0 5px; color: var(--text);">${blog.title}</h4>
+                            <small style="color: var(--text-light);">
+                                ${blog.category} • ${blog.author} • ${blog.date} • ${blog.readTime}
+                            </small>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button onclick="editBlogPost(${blog.id})" style="background: #2563eb; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 12px;">Edit</button>
+                            <button onclick="deleteBlogPost(${blog.id})" style="background: #dc2626; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 12px;">Delete</button>
+                        </div>
+                    </div>
+                    <p style="margin: 10px 0; color: var(--text-light); font-size: 14px;">
+                        ${blog.content.substring(0, 150)}${blog.content.length > 150 ? '...' : ''}
+                    </p>
+                    ${blog.tags.length > 0 ? `<div style="margin-top: 8px;"><small style="color: var(--text-light);">Tags: ${blog.tags.join(', ')}</small></div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        async function deleteBlogPost(blogId) {
+            if (confirm('Are you sure you want to delete this blog post?')) {
+                try {
+                    const response = await fetch(`${API_BASE}/blogs/${blogId}`, {
+                        method: 'DELETE'
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        await loadBlogPosts();
+                        showSuccess();
+                    } else {
+                        alert('Failed to delete blog post: ' + result.error);
+                    }
+                } catch (error) {
+                    console.error('Error deleting blog post:', error);
+                    alert('Error deleting blog post. Please try again.');
+                }
+            }
+        }
+
+        function editBlogPost(blogId) {
+            const blog = blogPosts.find(b => b.id === blogId);
+            if (!blog) return;
+
+            // Populate form with blog data
+            document.getElementById('blog-title').value = blog.title;
+            document.getElementById('blog-author').value = blog.author;
+            document.getElementById('blog-category').value = blog.category;
+            document.getElementById('blog-content').value = blog.content;
+            document.getElementById('blog-image').value = blog.image;
+            document.getElementById('blog-tags').value = blog.tags.join(', ');
+
+            // Change form to edit mode
+            const form = document.querySelector('#blogs form');
+            const submitButton = form.querySelector('button[type="submit"]');
+            const cancelButton = document.getElementById('cancel-edit-btn');
+            submitButton.textContent = 'Update Blog Post';
+            cancelButton.style.display = 'inline-block';
+            form.onsubmit = (event) => updateBlogPost(event, blogId);
+
+            // Scroll to form
+            document.querySelector('.admin-section h3').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function updateBlogPost(event, blogId) {
+            event.preventDefault();
+
+            const title = document.getElementById('blog-title').value.trim();
+            const author = document.getElementById('blog-author').value.trim();
+            const category = document.getElementById('blog-category').value;
+            const content = document.getElementById('blog-content').value.trim();
+            const image = document.getElementById('blog-image').value.trim();
+            const tags = document.getElementById('blog-tags').value.trim();
+
+            if (!title || !content) {
+                alert('Please fill in at least the title and content.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/blogs/${blogId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        title,
+                        author,
+                        category,
+                        content,
+                        image,
+                        tags
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    // Reset form to add mode
+                    resetBlogForm();
+
+                    // Reload blogs
+                    await loadBlogPosts();
+
+                    showSuccess();
+                } else {
+                    alert('Failed to update blog post: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error updating blog post:', error);
+                alert('Error updating blog post. Please try again.');
+            }
+        }
+
+        function resetBlogForm() {
+            const form = document.querySelector('#blogs form');
+            const submitButton = form.querySelector('button[type="submit"]');
+            const cancelButton = document.getElementById('cancel-edit-btn');
+            submitButton.textContent = 'Publish Blog Post';
+            cancelButton.style.display = 'none';
+            form.onsubmit = addBlogPost;
+            form.reset();
+            document.getElementById('blog-author').value = 'Habert Oyolla';
+        }
+
+        function updateContact(event) {
+            event.preventDefault();
+            document.querySelector('a[href^="mailto:"]').textContent = document.getElementById('contact-email').value;
+            document.querySelector('a[href^="mailto:"]').href = 'mailto:' + document.getElementById('contact-email').value;
+            
+            document.querySelector('a[href^="tel:"]').textContent = document.getElementById('contact-phone').value;
+            document.querySelector('a[href^="tel:"]').href = 'tel:' + document.getElementById('contact-phone').value.replace(/\s/g, '');
+            
+            document.querySelector('a[href*="facebook"]').href = document.getElementById('contact-facebook').value;
+            document.querySelector('a[href*="twitter"]').href = document.getElementById('contact-twitter').value;
+            document.querySelector('a[href*="youtube"]').href = document.getElementById('contact-youtube').value;
+            
+            showSuccess();
+        }
+    </script>
+</body>
+</html>
