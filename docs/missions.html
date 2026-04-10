@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Missions - Walking With Jesus Christ</title>
-    <link rel="stylesheet" href="/src/style.css">
+    <link rel="stylesheet" href="./src/style.css">
     <style>
         .mission-post {
             background: var(--white);
@@ -142,7 +142,7 @@
     <nav class="navbar" id="navbar">
       <div class="nav-container">
         <a href="index.html" class="nav-logo">
-          <img src="profile-image.jpg" alt="Walking With Jesus" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 10px;"> Walking With Jesus
+          <img src="./profile-image.jpg" alt="Walking With Jesus" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 10px;"> Walking With Jesus
         </a>
         <div class="nav-links">
           <a href="index.html">Home</a>
@@ -474,6 +474,44 @@
         // Initialize the page
         lucide.createIcons();
         renderMissionPosts();
+
+        // Mobile Menu Functionality
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileOverlay = document.getElementById('mobile-overlay');
+        const mobileLinks = document.querySelectorAll('.mobile-links a');
+
+        // Toggle mobile menu
+        if (mobileMenuBtn && mobileOverlay) {
+            mobileMenuBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                mobileOverlay.classList.toggle('active');
+                document.body.style.overflow = mobileOverlay.classList.contains('active') ? 'hidden' : '';
+            });
+
+            // Close mobile menu when clicking on a link
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            });
+
+            // Close mobile menu when clicking outside
+            mobileOverlay.addEventListener('click', function(e) {
+                if (e.target === mobileOverlay) {
+                    mobileOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+
+            // Close mobile menu on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && mobileOverlay.classList.contains('active')) {
+                    mobileOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        }
     </script>
 </body>
 </html>
