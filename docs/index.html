@@ -1659,6 +1659,58 @@ function renderMissionPosts(missionPosts) {
     `).join('');
   }
 }
+
+
+// Initialize Lucide icons after mobile menu setup
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize Lucide icons
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
+  }
+  
+  // Re-initialize mobile menu after DOM is fully loaded
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const mobileOverlay = document.getElementById('mobile-overlay');
+  const mobileLinks = document.querySelectorAll('.mobile-links a');
+
+  console.log('Mobile menu elements:', { mobileMenuBtn, mobileOverlay, mobileLinks });
+
+  // Toggle mobile menu
+  if (mobileMenuBtn && mobileOverlay) {
+    mobileMenuBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      console.log('Mobile menu button clicked');
+      mobileOverlay.classList.toggle('active');
+      document.body.style.overflow = mobileOverlay.classList.contains('active') ? 'hidden' : '';
+    });
+
+    // Close mobile menu when clicking on a link
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        mobileOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // Close mobile menu when clicking outside
+    mobileOverlay.addEventListener('click', function(e) {
+      if (e.target === mobileOverlay) {
+        mobileOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+
+    // Close mobile menu on escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && mobileOverlay.classList.contains('active')) {
+        mobileOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  } else {
+    console.error('Mobile menu elements not found');
+  }
+});
 </script>
   </body>
 </html> 
