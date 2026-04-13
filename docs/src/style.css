@@ -1121,7 +1121,257 @@ h1, h2, h3, h4, .nav-logo {
   box-shadow: var(--shadow-lg);
 }
 
+/* Events Calendar Section */
+.events-section {
+  background: var(--bg-alt);
+}
+
+.events-calendar {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--gold);
+}
+
+.calendar-header h3 {
+  color: var(--primary);
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.calendar-nav {
+  display: flex;
+  gap: 12px;
+}
+
+.calendar-btn {
+  background: var(--gold);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  color: var(--primary);
+}
+
+.calendar-btn:hover {
+  background: var(--gold-light);
+  transform: translateY(-2px);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--white);
+  border: 1px solid rgba(197, 160, 40, 0.2);
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 500;
+}
+
+.calendar-day:hover {
+  background: var(--gold-light);
+  color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.calendar-day.today {
+  background: var(--gold);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.calendar-day.has-event {
+  border-color: var(--gold);
+  border-width: 2px;
+}
+
+.calendar-day-header {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 0.9rem;
+}
+
+.events-list h4 {
+  color: var(--primary);
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+}
+
+.event-item {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-left: 4px solid var(--gold);
+  transition: var(--transition);
+}
+
+.event-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.event-date {
+  color: var(--gold);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.event-title {
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.event-time {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+.event-description {
+  color: var(--text);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Prayer Wall Section */
+.prayer-wall-section {
+  background: var(--white);
+}
+
+.prayer-wall-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+.prayer-submission {
+  background: var(--bg-alt);
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.prayer-submission h3 {
+  color: var(--primary);
+  margin-bottom: 24px;
+  font-size: 1.3rem;
+}
+
+.prayer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.prayer-requests {
+  background: var(--bg-alt);
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.prayer-requests h3 {
+  color: var(--primary);
+  margin-bottom: 24px;
+  font-size: 1.3rem;
+}
+
+.prayer-request-item {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  border-left: 4px solid var(--gold);
+  position: relative;
+}
+
+.prayer-request-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.prayer-request-name {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.prayer-request-category {
+  background: var(--gold);
+  color: var(--primary);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.prayer-request-text {
+  color: var(--text);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.prayer-request-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+
+.pray-button {
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: var(--transition);
+}
+
+.pray-button:hover {
+  background: var(--primary-light);
+}
+
+.pray-button.prayed {
+  background: var(--gold);
+  color: var(--primary);
+}
+
 /* Contact Section */
+.contact-section {
+  background: var(--bg-alt);
+}
+
 .contact-grid {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
