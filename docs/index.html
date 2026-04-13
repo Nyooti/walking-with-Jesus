@@ -42,6 +42,8 @@
           <a href="#blog">Blog</a>
           <a href="#events">Events</a>
           <a href="#prayer-wall">Prayer Wall</a>
+          <a href="#give">Give</a>
+          <a href="#newsletter">Newsletter</a>
           <a href="#contact">Contact</a>
           <a href="./admin.html" target="_blank" rel="noopener">Admin</a>
         </div>
@@ -52,6 +54,16 @@
           </button>
           <div class="search-results" id="search-results">
             <!-- Search results will be populated here -->
+          </div>
+        </div>
+        <div class="language-switcher">
+          <button class="language-btn" id="language-btn">
+            <i data-lucide="globe"></i>
+            <span id="current-lang">EN</span>
+          </button>
+          <div class="language-dropdown" id="language-dropdown">
+            <a href="#" data-lang="en" class="language-option active">English</a>
+            <a href="#" data-lang="sw" class="language-option">Swahili</a>
           </div>
         </div>
         <button class="mobile-menu-btn" id="mobile-menu-btn">
@@ -74,6 +86,8 @@
         <a href="#blog">Blog</a>
         <a href="#events">Events</a>
         <a href="#prayer-wall">Prayer Wall</a>
+        <a href="#give">Give</a>
+        <a href="#newsletter">Newsletter</a>
         <a href="#contact">Contact</a>
         <a href="./admin.html" target="_blank" rel="noopener">Admin</a>
       </div>
@@ -487,6 +501,120 @@
               <div id="prayer-requests-container">
                 <!-- Prayer requests will be populated by JavaScript -->
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Give / Donate -->
+      <section id="give" class="section give-section">
+        <div class="container">
+          <div class="section-header fade-in">
+            <h2 class="section-title">Support Our Ministry</h2>
+            <div class="gold-line"></div>
+            <p class="section-subtitle">Your generous support helps us spread the Gospel and serve communities worldwide</p>
+          </div>
+          
+          <div class="give-container">
+            <div class="give-options">
+              <div class="give-card">
+                <div class="give-icon">
+                  <i data-lucide="heart"></i>
+                </div>
+                <h3>One-Time Gift</h3>
+                <p>Support our ministry with a single donation</p>
+                <div class="give-amounts">
+                  <button class="amount-btn" data-amount="25">$25</button>
+                  <button class="amount-btn" data-amount="50">$50</button>
+                  <button class="amount-btn" data-amount="100">$100</button>
+                  <button class="amount-btn" data-amount="250">$250</button>
+                </div>
+                <input type="number" id="custom-amount" placeholder="Custom amount" class="custom-amount">
+                <button class="btn btn-gold btn-lg btn-full" onclick="processDonation('onetime')">Give Now</button>
+              </div>
+              
+              <div class="give-card">
+                <div class="give-icon">
+                  <i data-lucide="repeat"></i>
+                </div>
+                <h3>Monthly Partner</h3>
+                <p>Become a monthly partner in our mission</p>
+                <div class="give-amounts">
+                  <button class="amount-btn" data-amount="25">$25/mo</button>
+                  <button class="amount-btn" data-amount="50">$50/mo</button>
+                  <button class="amount-btn" data-amount="100">$100/mo</button>
+                  <button class="amount-btn" data-amount="250">$250/mo</button>
+                </div>
+                <input type="number" id="monthly-amount" placeholder="Custom amount" class="custom-amount">
+                <button class="btn btn-gold btn-lg btn-full" onclick="processDonation('monthly')">Become Partner</button>
+              </div>
+            </div>
+            
+            <div class="give-impact">
+              <h3>Your Impact</h3>
+              <div class="impact-items">
+                <div class="impact-item">
+                  <i data-lucide="book-open"></i>
+                  <span>Biblical teaching materials</span>
+                </div>
+                <div class="impact-item">
+                  <i data-lucide="users"></i>
+                  <span>Community outreach programs</span>
+                </div>
+                <div class="impact-item">
+                  <i data-lucide="globe"></i>
+                  <span>Global mission support</span>
+                </div>
+                <div class="impact-item">
+                  <i data-lucide="radio"></i>
+                  <span>Digital ministry expansion</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Newsletter Signup -->
+      <section id="newsletter" class="section newsletter-section">
+        <div class="container">
+          <div class="newsletter-content">
+            <div class="newsletter-text">
+              <h2>Stay Connected</h2>
+              <p>Join our community and receive weekly inspiration, updates, and exclusive content</p>
+              <div class="newsletter-benefits">
+                <div class="benefit-item">
+                  <i data-lucide="mail"></i>
+                  <span>Weekly devotionals</span>
+                </div>
+                <div class="benefit-item">
+                  <i data-lucide="calendar"></i>
+                  <span>Event announcements</span>
+                </div>
+                <div class="benefit-item">
+                  <i data-lucide="heart"></i>
+                  <span>Prayer requests</span>
+                </div>
+              </div>
+            </div>
+            <div class="newsletter-form">
+              <form id="newsletter-form" class="newsletter-signup">
+                <div class="form-group">
+                  <input type="text" id="newsletter-name" placeholder="Your name" required>
+                </div>
+                <div class="form-group">
+                  <input type="email" id="newsletter-email" placeholder="Your email address" required>
+                </div>
+                <div class="form-group">
+                  <select id="newsletter-interest">
+                    <option value="general">General Updates</option>
+                    <option value="prayer">Prayer Focus</option>
+                    <option value="missions">Mission Updates</option>
+                    <option value="events">Events Only</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-gold btn-lg btn-full">Subscribe Now</button>
+              </form>
             </div>
           </div>
         </div>
@@ -2224,7 +2352,516 @@ document.addEventListener('DOMContentLoaded', function() {
   generateCalendar(currentMonth, currentYear);
   renderPrayerRequests();
   
-  // Make togglePrayer available globally
+  // Multi-language Support
+  const translations = {
+    en: {
+      // Navigation
+      nav: {
+        home: "Home",
+        gospel: "The Gospel",
+        sermons: "Sermons",
+        dailyVerse: "Daily Verse",
+        quoteDay: "Quote of the Day",
+        testimonies: "Testimonies",
+        prayer: "Prayer",
+        missions: "Missions",
+        blog: "Blog",
+        events: "Events",
+        prayerWall: "Prayer Wall",
+        contact: "Contact",
+        admin: "Admin",
+        search: "Search..."
+      },
+      // Hero Section
+      hero: {
+        title: "Walking With Jesus Christ",
+        subtitle: "A professional ministry platform for biblical teaching, discipleship, and global impact.",
+        verse: "\"For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.\"",
+        verseRef: "John 3:16",
+        beginJourney: "Begin Your Journey"
+      },
+      // Gospel Section
+      gospel: {
+        title: "The Gospel Message",
+        subtitle: "Understanding the Bridge to Salvation",
+        godsLove: "God's Love",
+        godsLoveText: "God created you and loves you perfectly. He desires a relationship with you, but our sin has created a separation.",
+        theProblem: "The Problem",
+        theProblemText: "For all have sinned, and come short of the glory of God. Our sin deserves eternal separation from Him.",
+        theSolution: "The Solution",
+        theSolutionText: "Jesus Christ died on the cross for our sins and rose again, offering us forgiveness and eternal life.",
+        theResponse: "The Response",
+        theResponseText: "Accept Jesus as your personal Lord and Savior and receive the gift of eternal life."
+      },
+      // Events Section
+      events: {
+        title: "Upcoming Events",
+        subtitle: "Join us for worship, fellowship, and spiritual growth",
+        noEvents: "No upcoming events scheduled."
+      },
+      // Prayer Wall
+      prayerWall: {
+        title: "Prayer Wall",
+        subtitle: "Join us in praying for our community and the world",
+        submitPrayer: "Submit a Prayer Request",
+        nameOptional: "Name (Optional)",
+        category: "Category",
+        prayerRequest: "Prayer Request",
+        submitButton: "Submit Prayer Request",
+        prayerRequests: "Prayer Requests",
+        noRequests: "No prayer requests yet. Be the first to submit one!",
+        pray: "Pray",
+        prayed: "Prayed",
+        categories: {
+          healing: "Healing",
+          guidance: "Guidance",
+          family: "Family",
+          finances: "Finances",
+          salvation: "Salvation",
+          other: "Other"
+        }
+      },
+      // Common
+      common: {
+        loading: "Loading...",
+        searchNoResults: "No results found for",
+        success: "Success!",
+        error: "Error",
+        close: "Close"
+      }
+    },
+    sw: {
+      // Navigation
+      nav: {
+        home: "Nyumbani",
+        gospel: "Injili",
+        sermons: "Mahubiri",
+        dailyVerse: "Siku ya Mstari",
+        quoteDay: "Nukuu ya Siku",
+        testimonies: "Ushuhuda",
+        prayer: "Maombi",
+        missions: "Misheni",
+        blog: "Blogi",
+        events: "Matukio",
+        prayerWall: "Ukuta wa Maombi",
+        contact: "Mawasiliano",
+        admin: "Admin",
+        search: "Tafuta..."
+      },
+      // Hero Section
+      hero: {
+        title: "Kutembea Na Yesu Kristo",
+        subtitle: "Jukwaa la kitaalam la kazi ya injili, mafundisho ya Biblia, na umisionari duniani kote.",
+        verse: "\"Kwa maana Mungu alimpenda dunia sana, hata akamtoa Mwanae kipekee wa kuzaliwa, ili kila mtu amwaminiye asipotee, bali awe na uzima wa milele.\"",
+        verseRef: "Yohana 3:16",
+        beginJourney: "Anza Safari Yako"
+      },
+      // Gospel Section
+      gospel: {
+        title: "Ujumbe wa Injili",
+        subtitle: "Kuelewa Daraja la Wokovu",
+        godsLove: "Upendo wa Mungu",
+        godsLoveText: "Mungu amekuumba na anakupenda kikamilifu. Anataka uhusiano nawe, lakini dhambi zetu zimeleta utengano.",
+        theProblem: "Tatizo",
+        theProblemText: "Kwa maana watu wote wamekosea, wakashindwa kufikia utukufu wa Mungu. Dhambi zetu zinastahili kuachwa naye milele.",
+        theSolution: "Suluhisho",
+        theSolutionText: "Yesu Kristo alikufa msalabani kwa ajili ya dhambi zetu na akafufuka, akitoa msamaha na uzima wa milele.",
+        theResponse: "Jibu",
+        theResponseText: "Kubali Yesu kama Bwana na Mwokozi wako wa kibinafsi na upokee zawadi ya uzima wa milele."
+      },
+      // Events Section
+      events: {
+        title: "Matukio Yajayo",
+        subtitle: "Tuungane kwa ibada, urafiki, na ukuhani wa kiroho",
+        noEvents: "Hakuna matukio yaliyopangwa kwa sasa."
+      },
+      // Prayer Wall
+      prayerWall: {
+        title: "Ukuta wa Maombi",
+        subtitle: "Tuungane katika kusali kwa jamii yetu na dunia",
+        submitPrayer: "Wasilisha Ombi la Maombi",
+        nameOptional: "Jina (Hiari)",
+        category: "Kategoria",
+        prayerRequest: "Ombi la Maombi",
+        submitButton: "Wasilisha Ombi la Maombi",
+        prayerRequests: "Maombi",
+        noRequests: "Hakuna maombi bado. Kuwa wa kwanza kwasilisha moja!",
+        pray: "Sali",
+        prayed: "Imesaliwa",
+        categories: {
+          healing: "Uponyaji",
+          guidance: "Uongozi",
+          family: "Familia",
+          finances: "Fedha",
+          salvation: "Wokovu",
+          other: "Nyingine"
+        }
+      },
+      // Common
+      common: {
+        loading: "Inapakia...",
+        searchNoResults: "Hakuna matokeo yaliyopatikana kwa",
+        success: "Mafanikio!",
+        error: "Hitilafu",
+        close: "Funga"
+      }
+    }
+  };
+  
+  let currentLanguage = localStorage.getItem('language') || 'en';
+  
+  function updateLanguage(lang) {
+    currentLanguage = lang;
+    localStorage.setItem('language', lang);
+    
+    // Update language button
+    document.getElementById('current-lang').textContent = lang.toUpperCase();
+    
+    // Update active language option
+    document.querySelectorAll('.language-option').forEach(option => {
+      option.classList.toggle('active', option.dataset.lang === lang);
+    });
+    
+    // Update navigation
+    updateNavigation();
+    
+    // Update hero section
+    updateHeroSection();
+    
+    // Update sections
+    updateSections();
+    
+    // Update search placeholder
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+      searchInput.placeholder = translations[lang].nav.search;
+    }
+    
+    // Re-initialize Lucide icons
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+  }
+  
+  function updateNavigation() {
+    const navLinks = document.querySelectorAll('.nav-links a, .mobile-links a');
+    const translations_nav = translations[currentLanguage].nav;
+    
+    const linkMap = {
+      '#hero': translations_nav.home,
+      '#gospel': translations_nav.gospel,
+      '#sermons': translations_nav.sermons,
+      '#scripture': translations_nav.dailyVerse,
+      '#quote-day': translations_nav.quoteDay,
+      '#testimonies': translations_nav.testimonies,
+      '#prayer': translations_nav.prayer,
+      '#missions': translations_nav.missions,
+      '#blog': translations_nav.blog,
+      '#events': translations_nav.events,
+      '#prayer-wall': translations_nav.prayerWall,
+      '#contact': translations_nav.contact
+    };
+    
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      if (linkMap[href]) {
+        link.textContent = linkMap[href];
+      }
+    });
+  }
+  
+  function updateHeroSection() {
+    const heroTitle = document.querySelector('.hero-title');
+    const heroSubtitle = document.querySelector('.hero-subtitle');
+    const heroVerse = document.querySelector('.hero-verse');
+    const heroButton = document.querySelector('.hero-content .btn');
+    
+    const hero_trans = translations[currentLanguage].hero;
+    
+    if (heroTitle) heroTitle.textContent = hero_trans.title;
+    if (heroSubtitle) heroSubtitle.textContent = hero_trans.subtitle;
+    if (heroVerse) {
+      const verseText = heroVerse.innerHTML.split('<br>')[0];
+      const verseRef = heroVerse.innerHTML.split('<br>')[1];
+      heroVerse.innerHTML = `${verseText} <br><span>-${hero_trans.verseRef}</span>`;
+    }
+    if (heroButton) heroButton.textContent = hero_trans.beginJourney;
+  }
+  
+  function updateSections() {
+    const trans = translations[currentLanguage];
+    
+    // Events Section
+    const eventsTitle = document.querySelector('#events .section-title');
+    const eventsSubtitle = document.querySelector('#events .section-subtitle');
+    if (eventsTitle) eventsTitle.textContent = trans.events.title;
+    if (eventsSubtitle) eventsSubtitle.textContent = trans.events.subtitle;
+    
+    // Prayer Wall Section
+    const prayerWallTitle = document.querySelector('#prayer-wall .section-title');
+    const prayerWallSubtitle = document.querySelector('#prayer-wall .section-subtitle');
+    const prayerSubmitTitle = document.querySelector('#prayer-wall h3');
+    const prayerNameLabel = document.querySelector('label[for="prayer-name"]');
+    const prayerCategoryLabel = document.querySelector('label[for="prayer-category"]');
+    const prayerTextLabel = document.querySelector('label[for="prayer-request-text"]');
+    const prayerSubmitBtn = document.querySelector('#prayer-form button[type="submit"]');
+    const prayerRequestsTitle = document.querySelector('.prayer-requests h3');
+    
+    if (prayerWallTitle) prayerWallTitle.textContent = trans.prayerWall.title;
+    if (prayerWallSubtitle) prayerWallSubtitle.textContent = trans.prayerWall.subtitle;
+    if (prayerSubmitTitle) prayerSubmitTitle.textContent = trans.prayerWall.submitPrayer;
+    if (prayerNameLabel) prayerNameLabel.textContent = trans.prayerWall.nameOptional;
+    if (prayerCategoryLabel) prayerCategoryLabel.textContent = trans.prayerWall.category;
+    if (prayerTextLabel) prayerTextLabel.textContent = trans.prayerWall.prayerRequest;
+    if (prayerSubmitBtn) prayerSubmitBtn.textContent = trans.prayerWall.submitButton;
+    if (prayerRequestsTitle) prayerRequestsTitle.textContent = trans.prayerWall.prayerRequests;
+    
+    // Update prayer categories
+    const categorySelect = document.getElementById('prayer-category');
+    if (categorySelect) {
+      const categories = trans.prayerWall.categories;
+      categorySelect.innerHTML = `
+        <option value="healing">${categories.healing}</option>
+        <option value="guidance">${categories.guidance}</option>
+        <option value="family">${categories.family}</option>
+        <option value="finances">${categories.finances}</option>
+        <option value="salvation">${categories.salvation}</option>
+        <option value="other">${categories.other}</option>
+      `;
+    }
+  }
+  
+  // Language switcher functionality
+  const languageBtn = document.getElementById('language-btn');
+  const languageDropdown = document.getElementById('language-dropdown');
+  
+  languageBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    languageDropdown.classList.toggle('active');
+  });
+  
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.language-switcher')) {
+      languageDropdown.classList.remove('active');
+    }
+  });
+  
+  // Handle language selection
+  document.querySelectorAll('.language-option').forEach(option => {
+    option.addEventListener('click', function(e) {
+      e.preventDefault();
+      const selectedLang = this.dataset.lang;
+      updateLanguage(selectedLang);
+      languageDropdown.classList.remove('active');
+    });
+  });
+  
+  // Initialize language on page load
+  updateLanguage(currentLanguage);
+  
+  // Donation Functionality
+  let selectedAmount = null;
+  let selectedType = null;
+  
+  // Amount button selection
+  document.querySelectorAll('.amount-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      // Remove selected class from all buttons in the same card
+      const card = this.closest('.give-card');
+      card.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
+      
+      // Add selected class to clicked button
+      this.classList.add('selected');
+      
+      // Clear custom amount input
+      const customInput = card.querySelector('.custom-amount');
+      if (customInput) customInput.value = '';
+      
+      selectedAmount = this.dataset.amount;
+    });
+  });
+  
+  // Custom amount input handling
+  document.querySelectorAll('.custom-amount').forEach(input => {
+    input.addEventListener('input', function() {
+      // Remove selected class from amount buttons in the same card
+      const card = this.closest('.give-card');
+      card.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('selected'));
+      
+      selectedAmount = this.value;
+    });
+  });
+  
+  function processDonation(type) {
+    selectedType = type;
+    
+    // Get amount based on selected type
+    let amount = selectedAmount;
+    if (!amount) {
+      const inputId = type === 'onetime' ? 'custom-amount' : 'monthly-amount';
+      const customInput = document.getElementById(inputId);
+      amount = customInput ? customInput.value : '';
+    }
+    
+    if (!amount || amount <= 0) {
+      showDonationMessage('Please select or enter a valid donation amount.', 'error');
+      return;
+    }
+    
+    // Show processing message
+    showDonationMessage('Processing your donation...', 'processing');
+    
+    // Simulate donation processing (in real implementation, this would connect to payment processor)
+    setTimeout(() => {
+      const donationData = {
+        type: type,
+        amount: amount,
+        date: new Date().toISOString(),
+        status: 'completed'
+      };
+      
+      // Save to localStorage for demonstration
+      const donations = JSON.parse(localStorage.getItem('donations') || '[]');
+      donations.push(donationData);
+      localStorage.setItem('donations', JSON.stringify(donations));
+      
+      showDonationMessage(`Thank you for your $${amount} ${type === 'onetime' ? 'gift' : 'monthly partnership'}! Your support makes a difference.`, 'success');
+      
+      // Reset form
+      document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('selected'));
+      document.querySelectorAll('.custom-amount').forEach(input => input.value = '');
+      selectedAmount = null;
+      
+    }, 2000);
+  }
+  
+  function showDonationMessage(message, type) {
+    // Remove existing messages
+    const existingMessage = document.querySelector('.donation-message');
+    if (existingMessage) {
+      existingMessage.remove();
+    }
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `donation-message ${type}`;
+    messageDiv.innerHTML = `
+      <div class="donation-message-content">
+        <i data-lucide="${type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : 'loader'}"></i>
+        <span>${message}</span>
+      </div>
+    `;
+    
+    // Insert after the give container
+    const giveContainer = document.querySelector('.give-container');
+    if (giveContainer) {
+      giveContainer.appendChild(messageDiv);
+      
+      // Re-initialize Lucide icons
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+      
+      // Auto-remove success messages after 5 seconds
+      if (type === 'success') {
+        setTimeout(() => {
+          if (messageDiv.parentNode) {
+            messageDiv.parentNode.removeChild(messageDiv);
+          }
+        }, 5000);
+      }
+    }
+  }
+  
+  // Newsletter Functionality
+  document.getElementById('newsletter-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const name = document.getElementById('newsletter-name').value.trim();
+    const email = document.getElementById('newsletter-email').value.trim();
+    const interest = document.getElementById('newsletter-interest').value;
+    
+    // Basic validation
+    if (!name || !email) {
+      showNewsletterMessage('Please fill in all required fields.', 'error');
+      return;
+    }
+    
+    if (!isValidEmail(email)) {
+      showNewsletterMessage('Please enter a valid email address.', 'error');
+      return;
+    }
+    
+    // Show processing message
+    showNewsletterMessage('Subscribing to newsletter...', 'processing');
+    
+    // Simulate newsletter signup (in real implementation, this would connect to email service)
+    setTimeout(() => {
+      const subscriptionData = {
+        name: name,
+        email: email,
+        interest: interest,
+        date: new Date().toISOString(),
+        status: 'active'
+      };
+      
+      // Save to localStorage for demonstration
+      const subscriptions = JSON.parse(localStorage.getItem('newsletterSubscriptions') || '[]');
+      subscriptions.push(subscriptionData);
+      localStorage.setItem('newsletterSubscriptions', JSON.stringify(subscriptions));
+      
+      showNewsletterMessage(`Welcome ${name}! You've been subscribed to our newsletter.`, 'success');
+      
+      // Reset form
+      this.reset();
+      
+    }, 1500);
+  });
+  
+  function showNewsletterMessage(message, type) {
+    // Remove existing messages
+    const existingMessage = document.querySelector('.newsletter-message');
+    if (existingMessage) {
+      existingMessage.remove();
+    }
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `newsletter-message ${type}`;
+    messageDiv.innerHTML = `
+      <div class="newsletter-message-content">
+        <i data-lucide="${type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : 'loader'}"></i>
+        <span>${message}</span>
+      </div>
+    `;
+    
+    // Insert after the newsletter form
+    const newsletterForm = document.querySelector('.newsletter-signup');
+    if (newsletterForm) {
+      newsletterForm.appendChild(messageDiv);
+      
+      // Re-initialize Lucide icons
+      if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+      }
+      
+      // Auto-remove success messages after 5 seconds
+      if (type === 'success') {
+        setTimeout(() => {
+          if (messageDiv.parentNode) {
+            messageDiv.parentNode.removeChild(messageDiv);
+          }
+        }, 5000);
+      }
+    }
+  }
+  
+  function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+  
+  // Make functions available globally
+  window.processDonation = processDonation;
   window.togglePrayer = togglePrayer;
   
   // Re-initialize mobile menu after DOM is fully loaded
