@@ -1226,6 +1226,7 @@
         async function addBlogPost(event) {
             event.preventDefault();
 
+            // Enhanced form validation
             const title = document.getElementById('blog-title').value.trim();
             const author = document.getElementById('blog-author').value.trim();
             const category = document.getElementById('blog-category').value;
@@ -1233,8 +1234,57 @@
             const image = document.getElementById('blog-image').value.trim();
             const tags = document.getElementById('blog-tags').value.trim();
 
-            if (!title || !content) {
-                alert('Please fill in at least the title and content.');
+            // Clear previous validation states
+            clearValidation();
+
+            // Validate form fields
+            const errors = [];
+            
+            if (!title) {
+                showFieldError('blog-title', 'Blog title is required');
+                errors.push('Blog title is required');
+            } else if (title.length < 3) {
+                showFieldError('blog-title', 'Blog title must be at least 3 characters long');
+                errors.push('Blog title must be at least 3 characters long');
+            } else if (title.length > 200) {
+                showFieldError('blog-title', 'Blog title must be less than 200 characters');
+                errors.push('Blog title must be less than 200 characters');
+            } else {
+                showFieldSuccess('blog-title');
+            }
+
+            if (!content) {
+                showFieldError('blog-content', 'Blog content is required');
+                errors.push('Blog content is required');
+            } else if (content.length < 50) {
+                showFieldError('blog-content', 'Blog content must be at least 50 characters long');
+                errors.push('Blog content must be at least 50 characters long');
+            } else if (content.length > 10000) {
+                showFieldError('blog-content', 'Blog content must be less than 10,000 characters');
+                errors.push('Blog content must be less than 10,000 characters');
+            } else {
+                showFieldSuccess('blog-content');
+            }
+
+            if (!author) {
+                showFieldError('blog-author', 'Author name is required');
+                errors.push('Author name is required');
+            } else if (author.length < 2) {
+                showFieldError('blog-author', 'Author name must be at least 2 characters long');
+                errors.push('Author name must be at least 2 characters long');
+            } else {
+                showFieldSuccess('blog-author');
+            }
+
+            if (image && !isValidUrl(image)) {
+                showFieldError('blog-image', 'Please enter a valid image URL');
+                errors.push('Please enter a valid image URL');
+            } else if (image) {
+                showFieldSuccess('blog-image');
+            }
+
+            if (errors.length > 0) {
+                showValidationSummary(errors);
                 return;
             }
 
@@ -1461,6 +1511,71 @@
             document.querySelector('a[href*="youtube"]').href = document.getElementById('contact-youtube').value;
             
             showSuccess();
+        }
+
+        // Form Validation Helper Functions
+        function clearValidation() {
+            const formGroups = document.querySelectorAll('.form-group');
+            formGroups.forEach(group => {
+                group.classList.remove('error', 'success');
+                const errorMessage = group.querySelector('.error-message');
+                const successMessage = group.querySelector('.success-message');
+                if (errorMessage) errorMessage.remove();
+                if (successMessage) successMessage.remove();
+            });
+
+            const summaries = document.querySelectorAll('.form-validation-summary');
+            summaries.forEach(summary => summary.remove());
+        }
+
+        function showFieldError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+            const formGroup = field.closest('.form-group');
+            formGroup.classList.add('error');
+            
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.innerHTML = `<i data-lucide="alert-circle"></i> ${message}`;
+            formGroup.appendChild(errorDiv);
+            
+            // Re-initialize Lucide icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+
+        function showFieldSuccess(fieldId) {
+            const field = document.getElementById(fieldId);
+            const formGroup = field.closest('.form-group');
+            formGroup.classList.add('success');
+        }
+
+        function showValidationSummary(errors) {
+            const form = document.querySelector('#blogs form');
+            const summaryDiv = document.createElement('div');
+            summaryDiv.className = 'form-validation-summary error';
+            
+            const errorList = errors.map(error => `<li>${error}</li>`).join('');
+            summaryDiv.innerHTML = `
+                <h4><i data-lucide="alert-triangle"></i> Please fix the following errors:</h4>
+                <ul>${errorList}</ul>
+            `;
+            
+            form.insertBefore(summaryDiv, form.firstChild);
+            
+            // Re-initialize Lucide icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+
+        function isValidUrl(string) {
+            try {
+                const url = new URL(string);
+                return url.protocol === 'http:' || url.protocol === 'https:';
+            } catch (_) {
+                return false;
+            }
         }
     </script>
 

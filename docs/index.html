@@ -19,8 +19,13 @@
     
   </head>
   <body>
+    <!-- Skip Links for Accessibility -->
+    <div class="skip-links">
+      <a href="#main-content">Skip to main content</a>
+      <a href="#navigation">Skip to navigation</a>
+    </div>
     <!-- Navbar -->
-    <nav class="navbar" id="navbar">
+    <nav class="navbar" id="navbar" id="navigation">
       <div class="nav-container">
         <a href="#" class="nav-logo">
           <img src="./profile-image.jpg" alt="Walking With Jesus Christ" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 10px;"> Walking With Jesus Christ Ministries
@@ -37,6 +42,15 @@
           <a href="#blog">Blog</a>
           <a href="#contact">Contact</a>
           <a href="./admin.html" target="_blank" rel="noopener">Admin</a>
+        </div>
+        <div class="search-container">
+          <input type="text" id="search-input" placeholder="Search..." class="search-input">
+          <button class="search-btn" id="search-btn">
+            <i data-lucide="search"></i>
+          </button>
+          <div class="search-results" id="search-results">
+            <!-- Search results will be populated here -->
+          </div>
         </div>
         <button class="mobile-menu-btn" id="mobile-menu-btn">
           <i data-lucide="menu"></i>
@@ -61,7 +75,7 @@
       </div>
     </div>
 
-    <main>
+    <main id="main-content">
       <!-- Hero Section -->
       <section id="hero" class="hero">
         <div class="divine-rays"></div>
@@ -1692,6 +1706,155 @@ document.addEventListener('DOMContentLoaded', function() {
   if (typeof lucide !== 'undefined') {
     lucide.createIcons();
   }
+  
+  // Sticky Navigation and Active Section Detection
+  const navbar = document.getElementById('navbar');
+  const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+  const sections = document.querySelectorAll('section[id]');
+  
+  // Handle scroll events
+  function handleScroll() {
+    // Add scrolled class to navbar
+    if (window.scrollY > 50) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+    
+    // Update active navigation link
+    let current = '';
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.clientHeight;
+      if (window.scrollY >= sectionTop - 100) {
+        current = section.getAttribute('id');
+      }
+    });
+    
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === `#${current}`) {
+        link.classList.add('active');
+      }
+    });
+  }
+  
+  // Add scroll event listener
+  window.addEventListener('scroll', handleScroll);
+  
+  // Initial call to set active state
+  handleScroll();
+  
+  // Search Functionality
+  const searchInput = document.getElementById('search-input');
+  const searchBtn = document.getElementById('search-btn');
+  const searchResults = document.getElementById('search-results');
+  
+  // Search data - all searchable content
+  const searchableContent = [
+    // Gospel sections
+    { title: "God's Love", content: "God created you and loves you perfectly", type: "Gospel", url: "#gospel" },
+    { title: "The Problem", content: "For all have sinned, and come short of the glory of God", type: "Gospel", url: "#gospel" },
+    { title: "The Solution", content: "Jesus Christ died for our sins", type: "Gospel", url: "#gospel" },
+    { title: "The Response", content: "Accept Jesus as your personal Lord and Savior", type: "Gospel", url: "#gospel" },
+    
+    // Sections
+    { title: "Sermons", content: "Biblical teachings and messages", type: "Section", url: "#sermons" },
+    { title: "Daily Verse", content: "Daily scripture readings", type: "Section", url: "#scripture" },
+    { title: "Quote of the Day", content: "Inspirational Christian quotes", type: "Section", url: "#quote-day" },
+    { title: "Testimonies", content: "Personal faith stories and experiences", type: "Section", url: "#testimonies" },
+    { title: "Prayer", content: "Prayer requests and spiritual guidance", type: "Section", url: "#prayer" },
+    { title: "Missions", content: "Mission work and outreach programs", type: "Section", url: "#missions" },
+    { title: "Blog", content: "Christian articles and theological insights", type: "Section", url: "#blog" },
+    { title: "Contact", content: "Get in touch with the ministry", type: "Section", url: "#contact" },
+    
+    // Blog posts (will be dynamically loaded)
+    ...window.blogPosts ? window.blogPosts.map(post => ({
+      title: post.title,
+      content: post.content,
+      type: "Blog",
+      url: "#blog"
+    })) : []
+  ];
+  
+  function performSearch(query) {
+    const results = searchableContent.filter(item => {
+      const searchQuery = query.toLowerCase();
+      return item.title.toLowerCase().includes(searchQuery) || 
+             item.content.toLowerCase().includes(searchQuery);
+    });
+    
+    displaySearchResults(results, query);
+  }
+  
+  function displaySearchResults(results, query) {
+    if (results.length === 0) {
+      searchResults.innerHTML = `
+        <div class="search-no-results">
+          <i data-lucide="search-x"></i>
+          <p>No results found for "${query}"</p>
+        </div>
+      `;
+    } else {
+      searchResults.innerHTML = results.map(result => `
+        <div class="search-result-item" onclick="navigateToSearchResult('${result.url}')">
+          <div class="search-result-title">${highlightSearchTerm(result.title, query)}</div>
+          <div class="search-result-content">${highlightSearchTerm(result.content.substring(0, 100), query)}...</div>
+          <div class="search-result-type">${result.type}</div>
+        </div>
+      `).join('');
+    }
+    
+    // Re-initialize Lucide icons
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+  }
+  
+  function highlightSearchTerm(text, term) {
+    const regex = new RegExp(`(${term})`, 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
+  }
+  
+  function navigateToSearchResult(url) {
+    searchResults.classList.remove('active');
+    searchInput.value = '';
+    window.location.href = url;
+  }
+  
+  // Search event listeners
+  searchInput.addEventListener('input', function(e) {
+    const query = e.target.value.trim();
+    if (query.length > 2) {
+      performSearch(query);
+      searchResults.classList.add('active');
+    } else {
+      searchResults.classList.remove('active');
+    }
+  });
+  
+  searchBtn.addEventListener('click', function() {
+    const query = searchInput.value.trim();
+    if (query.length > 2) {
+      performSearch(query);
+      searchResults.classList.add('active');
+    }
+  });
+  
+  // Close search results when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.search-container')) {
+      searchResults.classList.remove('active');
+    }
+  });
+  
+  // Keyboard navigation for search
+  searchInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      searchResults.classList.remove('active');
+      searchInput.value = '';
+    }
+  });
   
   // Re-initialize mobile menu after DOM is fully loaded
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
